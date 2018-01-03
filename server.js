@@ -10,9 +10,7 @@ var axios = require("axios");
 var cheerio = require("cheerio");
 
 // Require all models
-var db = require("./models");
-
-var PORT = 3000;
+var dataBase = require("./models");
 
 // Initialize Express
 var app = express();
@@ -34,11 +32,22 @@ app.use(express.static("public"));
 // Set mongoose to leverage built in JavaScript ES6 Promises
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/bulletinBoss";
-mongoose.connect(MONGODB_URI, {
-  useMongoClient: true
+var databaseUri = "mongodb://localhost/bulletinBoss";
+    if(process.env.MONGODB_URI){
+        mongoose.connect(process.env.MONGODB_URI);
+    }else{
+        mongoose.connect(databaseUri)
+    };
+var db = mongoose.connection;
+// Show any mongoose errors
+db.on("error", function(error) {
+  console.log("Mongoose Error: ", error);
 });
 
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+  console.log("Mongoose connection successful.");
+});
 // Routes
 
 app.get("/", function(req, res) {
@@ -67,7 +76,7 @@ app.get("/scrape", function(req, res) {
           console.log("************END OF THIS ARTICLE*************");
         // Create a new Article using the `result` object built from scraping
 
-        db.Article
+        dataBase.Article
         // findOne method in if staterment else .create
           .create(result)
           .then(function(dbArticle) {
@@ -86,7 +95,7 @@ app.get("/scrape", function(req, res) {
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
-  db.Article
+  dataBase.Article
     .find({})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
@@ -101,7 +110,7 @@ app.get("/articles", function(req, res) {
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
   // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  db.Article
+  dataBase.Article
     .findOne({ _id: req.params.id })
     // ..and populate all of the notes associated with it
     .populate("note")
@@ -118,13 +127,13 @@ app.get("/articles/:id", function(req, res) {
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
   // Create a new note and pass the req.body to the entry
-  db.Note
+  dataBase.Note
     .create(req.body)
     .then(function(dbNote) {
       // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return dataBase.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
     })
     .then(function(dbArticle) {
       // If we were able to successfully update an Article, send it back to the client
@@ -137,6 +146,6 @@ app.post("/articles/:id", function(req, res) {
 });
 
 // Start the server
-app.listen(PORT, function() {
-  console.log("App running on port " + PORT + "!");
+app.listen(process.env.PORT || 3000, function() {
+  console.log("App running on port 3000 or online!");
 });
