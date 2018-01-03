@@ -33,11 +33,13 @@ app.use(express.static("public"));
 // Connect to the Mongo DB
 mongoose.Promise = Promise;
 var databaseUri = "mongodb://localhost/bulletinBoss";
-    if(process.env.MONGODB_URI){
-        mongoose.connect(process.env.MONGODB_URI);
-    }else{
-        mongoose.connect(databaseUri)
-    };
+
+if(process.env.MONGODB_URI){
+    mongoose.connect(process.env.MONGODB_URI);
+}else{
+    mongoose.connect(databaseUri, {useMongoClient: true})
+};
+
 var db = mongoose.connection;
 // Show any mongoose errors
 db.on("error", function(error) {
