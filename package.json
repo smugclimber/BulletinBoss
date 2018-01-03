@@ -1,0 +1,30 @@
+{
+  "name": "bulletinboss",
+  "version": "1.0.0",
+  "description": "The news site that lets users shine with witty comments! The app uses a scraper to get the most recent news articles for users and allows them to comment on each bulletin.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smugclimber/BulletinBoss.git"
+  },
+  "author": "Nick H",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smugclimber/BulletinBoss/issues"
+  },
+  "homepage": "https://github.com/smugclimber/BulletinBoss#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.1",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.12.0",
+    "morgan": "^1.9.0"
+  }
+}

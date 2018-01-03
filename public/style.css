@@ -1,0 +1,46 @@
+body {
+background-color: #F2F6D0;
+background-image: url("./images/climbing_bkgrd.jpg");
+background-position: center center;
+background-repeat:  no-repeat;
+background-attachment: fixed;
+background-size:  cover;
+background-color: #999;
+}
+
+#wrapper {
+  width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1%;
+}
+
+#articles {
+  background-color: tan;
+  display: inline-block;
+  overflow: auto;
+  width: 60%;
+  height: 600px;
+}
+
+#notes {
+  background-color: tan;
+  float: right;
+  width: 30%;
+}
+
+textarea, input {
+  display: block;
+  width: 100%;
+  background-color: #FCF5C7;
+}
+
+input {
+  height: 36px;
+  font-size: 24px;
+}
+
+textarea {
+  height: 200px;
+  font-size: 18px;
+}
